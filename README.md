@@ -1,4 +1,4 @@
-MiNER: A Two-Stage Pipeline for Metadata Extraction from Municipal Meeting Minutes
+# MiNER: A Two-Stage Pipeline for Metadata Extraction from Municipal Meeting Minutes
 
 A two-stage framework for **automatic metadata extraction** from municipal meeting minutes, combining **Question Answering (QA)** for segment boundary detection and **Named Entity Recognition (NER)** for fine-grained metadata extraction.  
 This repository supports the experiments presented in the accompanying paper, providing all code, data splits. The trained models are available on Hugging Face.
@@ -88,9 +88,7 @@ Prerequisites
 
 Setup Steps
 
-    Clone the repository
-
-git clone https://github.com/your-org/citilink_nlp.git       			MUDAR AQUI
+    Clone the repository  
 
     Create and activate a virtual environment
 
@@ -100,7 +98,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
     Install dependencies
 
 pip install -r requirements.txt
-
+```
 
 ---
 
@@ -119,15 +117,17 @@ This section describes how to build datasets, train models, and reproduce the re
 ```bash
 python3 build_qa_dataset.py --lang pt
 python3 build_qa_dataset.py --lang en
-
+```
 
 Train Model
 
+```bash
 python3 train_qa.py \
   --lang pt \
   --num_train_epochs 3 \
   --per_device_train_batch_size 8 \
   --fp16
+```
 
 Models:
 
@@ -141,39 +141,48 @@ Goal: Extract structured metadata entities from minutes.
 
 Convert Metadata → BIO
 
+```bash
 python3 process_to_bio.py \
   --input_dir data/dataset_metadata_pt \
   --output_dir data/metadata_final
+```
   
 Tokenize & Align Labels
 
+```bash
 python3 transform_dataset.py
+```
 
 Train NER Model
 
+```bash
 python3 model.py
+```
 
 
+---
 
-8. Dataset Description
+## 8. Dataset Description
 
-Overview
+### Overview
 
-Dataset Name: 				Council Metadata Corpus
-Languages: 				Portuguese and English
-Documents: 				6 municipalities × 20 minutes (2021–2024)
-Total Tokens:				1,170,417 tokens
-Total Tokens in Metadata Segments : 	32,364 tokens
-Total Metadata Segments: 		180 segments
-Annotation Fields:
+| Attribute | Description |
+|------------|-------------|
+| **Dataset Name** | Council Metadata Corpus |
+| **Languages** | Portuguese and English |
+| **Documents** | 6 municipalities × 20 minutes (2021–2024) |
+| **Total Tokens** | 1,170,417 |
+| **Tokens in Metadata Segments** | 32,364 |
+| **Total Metadata Segments** | 180 |
+| **Annotation Fields** | `date`, `minute_id`, `meeting_type`, `begin_time`, `end_time`, `location`, `participants` (with `role`, `presence`, and `party`), `opening_segment`, `closing_segment` |
 
-date, minute_id, meeting_type, begin_time, end_time, location, participants (with role, presence, and party)
+---
 
-opening_segment, closing_segment
+### Format
 
-Format:
-Each file (dataset_metadata_[lang]/municipality.json) contains:
+Each file (`dataset_metadata_[lang]/municipality.json`) follows the structure below:
 
+```bash
 {
   "documents": {
     "Municipality_Name": {
@@ -195,17 +204,15 @@ Each file (dataset_metadata_[lang]/municipality.json) contains:
     }
   }
 }
-
-
-## 8. Dataset Description
+```
 
 ### Data Files
 
 The data files for the **Council Metadata Corpus** are located in the `data/` directory:
 
-    dataset_metadata_en — Portuguese version (6 files with 20 documents each)
-    dataset_metadata_pt — English version (6 files with 20 documents each)
-    split — Train/val/test split information
+  -  dataset_metadata_en — Portuguese version (6 files with 20 documents each)
+  -  dataset_metadata_pt — English version (6 files with 20 documents each)
+  -  split — Train/val/test split information
 
 
 Each JSON file corresponds to one municipality and contains the full text of the meeting minute, along with manually annotated metadata fields.
