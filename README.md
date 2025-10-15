@@ -57,6 +57,10 @@ Minor improvements and refactoring are ongoing, particularly concerning dataset 
 - **JSON** – Data serialization and storage format  
 - **Markdown** – Documentation and reporting
 
+### Hardware
+
+- All experiments were run on an NVIDIA GeForce RTX 5070 Ti.
+
 ---
 
 ## 5. Dependencies
@@ -64,51 +68,25 @@ Minor improvements and refactoring are ongoing, particularly concerning dataset 
 All dependencies required to reproduce the experiments are listed in the `requirements.txt` file.  
 The main libraries and minimum versions are:
 
-transformers >= 4.30.0
-datasets >= 2.14.0
-torch >= 2.0.0
-evaluate >= 0.4.0
-spacy >= 3.5.0
-faker >= 19.0.0
-langchain >= 0.1.0
-numpy >= 1.24.0
-tqdm >= 4.65.0
-
-To install all dependencies:
-
-```bash
-pip install -r requirements.txt
-
-Installation
-Prerequisites
-
-    Python 3.10 or higher
-    CUDA-capable GPU (recommended, but CPU mode is supported)
-    At least 8GB RAM (16GB recommended for training)
-
-Setup Steps
-
-    Clone the repository  
-
-    Create and activate a virtual environment
-
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-    Install dependencies
-
-pip install -r requirements.txt
-```
+- transformers >= 4.30.0
+- datasets >= 2.14.0
+- torch >= 2.0.0
+- evaluate >= 0.4.0
+- spacy >= 3.5.0
+- faker >= 19.0.0
+- langchain >= 0.1.0
+- numpy >= 1.24.0
+- tqdm >= 4.65.0
 
 ---
 
-## 7. Usage
+## 6. Usage
 
 This section describes how to build datasets, train models, and reproduce the results for both stages of the MiNER pipeline.
 
 ---
 
-### 7.1 Question Answering (QA)
+### Question Answering (QA)
 
 **Goal:** Detect the *opening* and *closing* segments of each meeting minute, where metadata is typically concentrated.
 
@@ -119,7 +97,7 @@ python3 build_qa_dataset.py --lang pt
 python3 build_qa_dataset.py --lang en
 ```
 
-Train Model
+#### Train Model
 
 ```bash
 python3 train_qa.py \
@@ -129,17 +107,17 @@ python3 train_qa.py \
   --fp16
 ```
 
-Models:
+#### Models:
 
 - BERTimbau-Large
 
 - XLM-RoBERTa-Large
 
-Named Entity Recognition (NER)
+### Named Entity Recognition (NER)
 
-Goal: Extract structured metadata entities from minutes.
+**Goal:** Extract structured metadata entities from minutes.
 
-Convert Metadata → BIO
+#### Convert Metadata → BIO
 
 ```bash
 python3 process_to_bio.py \
@@ -147,13 +125,13 @@ python3 process_to_bio.py \
   --output_dir data/metadata_final
 ```
   
-Tokenize & Align Labels
+#### Tokenize & Align Labels
 
 ```bash
 python3 transform_dataset.py
 ```
 
-Train NER Model
+#### Train NER Model
 
 ```bash
 python3 model.py
@@ -162,7 +140,7 @@ python3 model.py
 
 ---
 
-## 8. Dataset Description
+## 7. Dataset Description
 
 ### Overview
 
@@ -242,17 +220,24 @@ Each JSON file corresponds to one municipality and contains the full text of the
 
 ---
 
-## 9. Architecture
+## 8. Architecture
 
 ### Component Descriptions
 
 The MiNER framework is composed of two core components — a Question Answering (QA) model for segment detection and a Named Entity Recognition (NER) model for structured metadata extraction.
 
+<div align="center">
+  <img src="assets/paper_pipeline.png" alt="MiNER Pipeline Overview" width="700"/>
+</div>
+
 #### Stage 1 – Question Answering (QA)
 
 - **Model:** [`deepset/xlm-roberta-large-squad2`](https://huggingface.co/deepset/xlm-roberta-large-squad2)  
 - **Objective:** Identify the *opening* and *closing* segments of each document that contain relevant metadata.  
-- **Training Data:** Automatically generated SQuAD v2-style dataset built from annotated municipal minutes.  
+- **Prompts:** For this task we built two prompts:
+  - "At the beginning of the minutes there is an opening segment. What is the last sentence of that opening segment?"
+  - "At the end of the minutes there is a closing segment. What is the first sentence of that closing segment?"
+- **Training Data:** SQuAD v2-style dataset manually built from annotated municipal minutes.  
 - **Evaluation Metrics:**  
   - **F1-score:** Measures token-level overlap between predicted and gold-standard answers.  
   - **Exact Match (EM):** Percentage of predictions that exactly match the gold reference span.
@@ -270,7 +255,7 @@ The MiNER framework is composed of two core components — a Question Answering 
 
 ---
 
-## 10. Reporting Issues
+## 9. Reporting Issues
 
 Please report any issues or bugs through the GitHub repository issue tracker:  
 [**Repository URL**]()
@@ -286,7 +271,7 @@ Providing this information helps ensure faster and more accurate debugging.
 
 ---
 
-## 11. License
+## 10. License
 
 This project is licensed under **CC-BY-ND 4.0 (Creative Commons Attribution–NoDerivatives 4.0 International)**.
 
@@ -308,7 +293,7 @@ Original documents remain the copyright of their respective municipal government
 
 ---
 
-## 12. Resources
+## 11. Resources
 
 ### Models
 
@@ -326,7 +311,7 @@ Pre-trained models fine-tuned within the MiNER framework are available on the **
 
 ---
 
-## 13. Acknowledgments
+## 12. Acknowledgments
 
 - Municipal governments of M1–M6 for providing access to meeting minutes  
 - The **INCEpTION Project** for the annotation platform  
