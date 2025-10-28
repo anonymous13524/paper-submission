@@ -17,6 +17,10 @@ The pipeline operates in two stages:
 
 Together, these components enable large-scale analysis of municipal records and serve as a benchmark for information extraction in long, formal administrative texts.
 
+<div align="center">
+  <img src="assets/Flash_Card.png" alt="MiNER Flash Card" width="700"/>
+</div>
+
 ---
 
 ## 2. Key Features
