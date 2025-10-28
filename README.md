@@ -1,6 +1,8 @@
 # MiNER: A Two-Stage Pipeline for Metadata Extraction from Municipal Meeting Minutes
 
-A two-stage framework for **automatic metadata extraction** from municipal meeting minutes, combining **Question Answering (QA)** for segment boundary detection and **Named Entity Recognition (NER)** for fine-grained metadata extraction.  
+This is the official repository for the submission of the short paper "MiNER: A Two-Stage Pipeline for Metadata Extraction from Municipal Meeting Minutes", for ECIR 2026.
+
+MiNER is a two-stage framework for **automatic metadata extraction** from municipal meeting minutes, combining **Question Answering (QA)** for segment boundary detection and **Named Entity Recognition (NER)** for fine-grained metadata extraction.  
 This repository supports the experiments presented in the accompanying paper, providing all code, data splits. The trained models are available on Hugging Face.
 
 ---
@@ -23,7 +25,7 @@ Together, these components enable large-scale analysis of municipal records and 
 - **Bilingual Dataset:** Portuguese originals and English translations from six municipalities.  
 - **Structured Metadata Extraction:** Supports the following entities `minute_id`, `date`, `location`, `meeting_type`, `participants`, `begin_time`, and `end_time`.    
 - **Efficiency & Performance:** Fine-tuned models outperform large generative LLMs while being orders of magnitude faster and greener.  
-- **Open Resources:** All datasets and code are released for reproducibility.
+- **Open Resources:** All datasets and code will be released for reproducibility. As of now its only a sample.
 
 ---
 
@@ -142,6 +144,16 @@ python3 model.py
 
 ## 7. Dataset Description
 
+### ⚠️ Important Note for Reviewers
+
+> ⚠️ **Dataset Access Notice:**  
+> The full dataset statistics are presented below; however, **only one municipal meeting minute** is publicly available in this repository due to submission constraints.
+
+Two **interactive demos** are provided to allow reviewers to test the models directly:
+
+- 🧩 [Metadata Identification Demo](https://huggingface.co/spaces/anonymous13542/Metadata_Identification_Demo)  
+- ✂️ [Boundary Detection Demo](https://huggingface.co/spaces/anonymous13542/Boundary-Detection-Demo)
+
 ### Overview
 
 | Attribute | Description |
@@ -188,8 +200,8 @@ Each file (`dataset_metadata_[lang]/municipality.json`) follows the structure be
 
 The data files for the **Council Metadata Corpus** are located in the `data/` directory:
 
-  -  dataset_metadata_en — Portuguese version (6 files with 20 documents each)
-  -  dataset_metadata_pt — English version (6 files with 20 documents each)
+  -  dataset_metadata_en — Portuguese version (1 files with 1 documents each)
+  -  dataset_metadata_pt — English version (1 files with 1 documents each)
   -  split — Train/val/test split information
 
 
@@ -210,7 +222,6 @@ Each JSON file corresponds to one municipality and contains the full text of the
 #### Challenges
 - **Domain Specificity:** Contains formal administrative language and municipality-specific jargon.  
 - **Long Segments:** Average segment length exceeds the context window of most Transformer architectures.
-- **Structural Diversity:** Each municipality follows its own meeting template and phrasing conventions.
 
 #### Advantages
 - **Authentic Data:** Based on real-world municipal records rather than synthetic text.  
